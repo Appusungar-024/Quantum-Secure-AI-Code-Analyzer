@@ -5,6 +5,7 @@ import validation
 import crypto_detector
 import pqc_converter
 import os
+import tempfile
 from reporter import generate_structured_output
 from typing import Optional
 
@@ -22,31 +23,31 @@ templates = Jinja2Templates(directory=os.path.join(os.path.dirname(__file__), "t
 
 @app.get("/")
 def home(request: Request):
-    return templates.TemplateResponse("index.html", {"request": request})
+    return templates.TemplateResponse(request, "index.html")
 
 @app.post("/analyze_web")
 def analyze_web(request: Request, code: Optional[str] = Form(None), file: Optional[UploadFile] = File(None), llm_enabled: bool = Form(False), use_local: bool = Form(False)):
     if file:
         content = file.file.read().decode("utf-8")
         filename = file.filename or "uploaded_code.py"
-        temp_path = f"/tmp/{filename}"
+        temp_path = os.path.join(tempfile.gettempdir(), filename)
         with open(temp_path, "w") as f:
             f.write(content)
         path = temp_path
     elif code:
-        temp_path = "/tmp/user_code.py"
+        temp_path = os.path.join(tempfile.gettempdir(), "user_code.py")
         with open(temp_path, "w") as f:
             f.write(code)
         path = temp_path
     else:
-        return templates.TemplateResponse("index.html", {"request": request, "error": "No code provided"})
+        return templates.TemplateResponse(request, "index.html", {"error": "No code provided"})
 
     try:
         report = validation.run_full_pipeline(path, llm_enabled=llm_enabled, use_local=use_local)
         structured = generate_structured_output(report)
-        return templates.TemplateResponse("result.html", {"request": request, "structured": structured, "report": report})
+        return templates.TemplateResponse(request, "result.html", {"structured": structured, "report": report})
     except Exception as e:
-        return templates.TemplateResponse("index.html", {"request": request, "error": str(e)})
+        return templates.TemplateResponse(request, "index.html", {"error": str(e)})
     finally:
         if os.path.exists(temp_path):
             os.remove(temp_path)

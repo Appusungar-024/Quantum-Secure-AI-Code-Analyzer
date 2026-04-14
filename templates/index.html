@@ -4,44 +4,69 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Quantum-Secure AI Code Analyzer</title>
+    <!-- Bootstrap CSS for layout Grid (styled over with Glassmorphism) -->
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
+    <!-- Custom 3D & Dark UI Styles -->
     <link href="/static/style.css" rel="stylesheet">
 </head>
 <body>
+    <!-- Background Canvas for Three.js -->
+    <canvas id="bg-canvas"></canvas>
+
     <div class="container mt-5">
-        <h1 class="text-center mb-4">Quantum-Secure AI Code Analyzer</h1>
-        <p class="text-center">Analyze your Python code for cryptographic vulnerabilities and convert to quantum-safe alternatives.</p>
+        <div class="glass-panel text-center mb-5">
+            <h1 class="mb-3">Quantum-Secure AI Code Analyzer</h1>
+            <p class="mb-0 text-light">Analyze your Python code for cryptographic vulnerabilities and convert to quantum-safe alternatives using Next-Gen AI.</p>
+        </div>
 
         {% if error %}
-        <div class="alert alert-danger">{{ error }}</div>
+        <div class="alert alert-danger glass-panel mb-4">{{ error }}</div>
         {% endif %}
 
-        <form action="/analyze_web" method="post" enctype="multipart/form-data" class="mt-4">
-            <div class="mb-3">
-                <label for="code" class="form-label">Enter Python Code:</label>
-                <textarea class="form-control" id="code" name="code" rows="10" placeholder="Paste your Python code here..."></textarea>
-            </div>
-            <div class="mb-3">
-                <label for="file" class="form-label">Or Upload a Python File:</label>
-                <input type="file" class="form-control" id="file" name="file" accept=".py">
-            </div>
-            <div class="form-check mb-3">
-                <input class="form-check-input" type="checkbox" id="llm_enabled" name="llm_enabled">
-                <label class="form-check-label" for="llm_enabled">
-                    Enable LLM Analysis (requires API key)
-                </label>
-            </div>
-            <div class="form-check mb-3">
-                <input class="form-check-input" type="checkbox" id="use_local" name="use_local">
-                <label class="form-check-label" for="use_local">
-                    Use Local LLM
-                </label>
-            </div>
-            <button type="submit" class="btn btn-primary">Analyze Code</button>
-        </form>
+        <div class="glass-panel">
+            <form action="/analyze_web" method="post" enctype="multipart/form-data">
+                <div class="mb-4">
+                    <label for="code" class="form-label">Enter Python Code:</label>
+                    <textarea class="form-control" id="code" name="code" rows="8" placeholder="Paste your vulnerable Python code here to test against the matrix..."></textarea>
+                </div>
+                
+                <h4 class="text-center my-3" style="font-size: 1.2rem; opacity: 0.7;">— OR —</h4>
+                
+                <div class="mb-4">
+                    <label for="file" class="form-label">Upload a Python File:</label>
+                    <input type="file" class="form-control" id="file" name="file" accept=".py">
+                </div>
+                
+                <div class="row mt-4">
+                    <div class="col-md-6 mb-3">
+                        <div class="form-check form-switch">
+                            <input class="form-check-input" type="checkbox" id="llm_enabled" name="llm_enabled">
+                            <label class="form-check-label ms-2" for="llm_enabled">
+                                Enable Deep AI Analysis
+                            </label>
+                        </div>
+                    </div>
+                    <div class="col-md-6 mb-3">
+                        <div class="form-check form-switch">
+                            <input class="form-check-input" type="checkbox" id="use_local" name="use_local">
+                            <label class="form-check-label ms-2" for="use_local">
+                                Use Local AI Model
+                            </label>
+                        </div>
+                    </div>
+                </div>
+                
+                <div class="text-center mt-4">
+                    <button type="submit" class="btn btn-primary px-5 py-3 fs-5 w-100">Initiate Quantum Scan</button>
+                </div>
+            </form>
+        </div>
     </div>
 
+    <!-- Three.js Library -->
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/three.js/r128/three.min.js"></script>
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
+    <!-- Custom Logic & 3D Engine -->
     <script src="/static/script.js"></script>
 </body>
 </html>

@@ -3,58 +3,89 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Analysis Results</title>
+    <title>Analysis Results - Quantum Security</title>
+    <!-- Bootstrap CSS -->
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
+    <!-- Custom 3D & Dark UI Styles -->
     <link href="/static/style.css" rel="stylesheet">
 </head>
 <body>
-    <div class="container mt-5">
-        <h1 class="text-center mb-4">Analysis Results</h1>
-        <a href="/" class="btn btn-secondary mb-4">Back to Home</a>
+    <!-- Background Canvas for Three.js -->
+    <canvas id="bg-canvas"></canvas>
 
-        <div class="card">
-            <div class="card-body">
-                <h5 class="card-title">Structured Output</h5>
-                <pre>{{ structured }}</pre>
-            </div>
+    <div class="container mt-5">
+        <div class="glass-panel text-center mb-5">
+            <h1 class="mb-3">Quantum Security Analysis Results</h1>
+            <a href="/" class="btn btn-secondary mt-2 px-4 shadow-sm">← Back to Code Analyzer</a>
+        </div>
+
+        <div class="glass-panel mb-5">
+            <h4 class="card-title mb-4">Structured Security Report</h4>
+            <pre class="m-0 p-4 border-0"><code>{{ structured }}</code></pre>
         </div>
 
         {% if report.files %}
-        <h2 class="mt-5">Detailed Files</h2>
-        {% for file in report.files %}
-        <div class="card mt-3">
-            <div class="card-header">
-                <h5>{{ file.path }}</h5>
-            </div>
-            <div class="card-body">
-                {% if file.issues %}
-                <h6>Issues:</h6>
-                <ul>
-                    {% for issue in file.issues %}
-                    <li>{{ issue.rule_id }}: {{ issue.message }} (Line {{ issue.lineno }})</li>
-                    {% endfor %}
-                </ul>
-                {% endif %}
+        <div class="glass-panel">
+            <h2 class="mb-4">Detailed File Breakdown</h2>
+            
+            {% for file in report.files %}
+            <div class="card bg-transparent border-0 mb-5">
+                <div class="card-header py-3 px-4 glass-panel border-bottom-0 rounded-bottom-0">
+                    <h5 class="m-0 d-flex align-items-center">
+                        <span class="badge bg-secondary me-3">File</span> 
+                        <span class="text-light text-break">{{ file.path }}</span>
+                    </h5>
+                </div>
+                <div class="card-body glass-panel rounded-top-0 mt-0 border-top-0">
+                    
+                    {% if file.issues %}
+                    <h6 class="text-danger mt-3 mb-3">Vulnerabilities Detected:</h6>
+                    <ul class="list-group list-group-flush bg-transparent rounded mb-4">
+                        {% for issue in file.issues %}
+                        <li class="list-group-item bg-transparent text-light border-secondary">
+                            <strong class="text-warning">{{ issue.rule_id }}</strong>: {{ issue.message }} 
+                            <span class="badge bg-danger ms-2">Line {{ issue.lineno }}</span>
+                        </li>
+                        {% endfor %}
+                    </ul>
+                    {% else %}
+                    <div class="alert alert-success bg-transparent border-success text-success">
+                        ✅ No cryptographic vulnerabilities detected in this file.
+                    </div>
+                    {% endif %}
 
-                {% if file.converted %}
-                <h6>Converted Code:</h6>
-                <pre><code>{{ file.converted }}</code></pre>
-                {% endif %}
+                    {% if file.converted %}
+                    <h6 class="text-success mt-4 mb-3">Quantum-Safe Converted Code:</h6>
+                    <pre class="p-4"><code>{{ file.converted }}</code></pre>
+                    {% endif %}
 
-                {% if file.validation %}
-                <h6>Validation:</h6>
-                <p>Syntax Valid: {{ file.validation.syntax_valid }}</p>
-                {% if file.validation.remaining_issues %}
-                <p>Remaining Issues: {{ file.validation.remaining_issues|length }}</p>
-                {% endif %}
-                {% endif %}
+                    {% if file.validation %}
+                    <h6 class="text-info mt-4 mb-3">Post-Conversion Validation:</h6>
+                    <div class="p-3 border border-secondary rounded" style="background: rgba(0,0,0,0.2);">
+                        <p class="mb-1"><strong>Syntax Valid:</strong> 
+                            {% if file.validation.syntax_valid %}
+                                <span class="text-success">Yes ✅</span>
+                            {% else %}
+                                <span class="text-danger">No ❌</span>
+                            {% endif %}
+                        </p>
+                        {% if file.validation.remaining_issues %}
+                        <p class="mb-0"><strong>Remaining Issues:</strong> <span class="badge bg-warning text-dark">{{ file.validation.remaining_issues|length }}</span></p>
+                        {% endif %}
+                    </div>
+                    {% endif %}
+                </div>
             </div>
+            {% endfor %}
+            
         </div>
-        {% endfor %}
         {% endif %}
     </div>
 
+    <!-- Three.js Library -->
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/three.js/r128/three.min.js"></script>
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
+    <!-- Custom Logic & 3D Engine -->
     <script src="/static/script.js"></script>
 </body>
 </html>
