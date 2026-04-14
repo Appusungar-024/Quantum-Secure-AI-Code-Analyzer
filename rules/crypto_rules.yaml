@@ -1,0 +1,31 @@
+rules:
+  - id: detect-rsa
+    pattern: RSA.generate(...)
+    message: "RSA detected - quantum-vulnerable public-key cryptography"
+    severity: ERROR
+    risk: HIGH
+    languages: [python]
+  - id: detect-ecc
+    pattern: ecdsa.generate_key(...)
+    message: "ECC detected - quantum-vulnerable public-key cryptography"
+    severity: ERROR
+    risk: HIGH
+    languages: [python]
+  - id: detect-aes-ecb
+    pattern: AES.new(..., AES.MODE_ECB)
+    message: "AES in ECB mode detected - weak block cipher mode"
+    severity: WARNING
+    risk: MEDIUM
+    languages: [python]
+  - id: detect-md5
+    pattern: hashlib.md5(...)
+    message: "MD5 hash detected - weak and broken hashing algorithm"
+    severity: WARNING
+    risk: MEDIUM
+    languages: [python]
+  - id: detect-sha1
+    pattern: hashlib.sha1(...)
+    message: "SHA1 hash detected - weak hashing algorithm"
+    severity: INFO
+    risk: LOW
+    languages: [python]

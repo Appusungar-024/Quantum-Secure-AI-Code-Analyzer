@@ -1,0 +1,20 @@
+body {
+    background-color: #f8f9fa;
+}
+
+.container {
+    max-width: 800px;
+}
+
+pre {
+    background-color: #f1f3f4;
+    padding: 10px;
+    border-radius: 5px;
+    overflow-x: auto;
+}
+
+code {
+    background-color: #f1f3f4;
+    padding: 2px 4px;
+    border-radius: 3px;
+}
